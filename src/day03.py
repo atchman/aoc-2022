@@ -11,19 +11,33 @@ LOWERCASE_VALUE = dict((x,y) for y, x in enumerate(string.ascii_lowercase, start
 UPPERCASE_VALUE = dict((x, y) for y, x in enumerate(string.ascii_uppercase, start=27))
 
 def main():
-    char_value = []
-    
+    char_value_one = []
+    char_value_two = []
+    line_num = 0
+    group = ['','','']
     with open(PATH, 'r') as FILE:
         for line in FILE:
             rucksack_one, rucksack_two = split_rucksack(line.strip())
             same_char = appear_in_both(rucksack_one, rucksack_two)
-            char_value.append(get_char_value(same_char))
+            char_value_one.append(get_char_value(same_char))
             
-            print(rucksack_one)
-            print(rucksack_two)
+            if line_num < 3:
+                group[line_num] = line.strip()
+                line_num +=1
+            else:
+                group_char = appear_in_group(group)
+                char_value_two.append(get_char_value(group_char))
+                group[0] = line.strip()
+                line_num = 1
+        else:
+            group_char = appear_in_group(group)
+            char_value_two.append(get_char_value(group_char))
+                       
             
-    print(char_value)
-    print(sum(char_value))
+    print(char_value_one)
+    print(sum(char_value_one))
+    print(char_value_two)
+    print(sum(char_value_two))
         
 
 def split_rucksack(whole):
@@ -49,6 +63,19 @@ def get_char_value(char):
         return lower
     if upper > 0:
         return upper
+    
+    
+def appear_in_group(group):
+    line_one = group[0]
+    line_two = group[1] 
+    line_three = group[2]
+    for i in line_one:
+        for j in line_two:
+            for k in line_three:
+                if i == j and j == k:
+                    appear = i
+                    break
+    return appear
     
   
 if __name__ == '__main__':
